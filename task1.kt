@@ -1,9 +1,9 @@
 fun main(args: Array<String>) {
    val trainList = mapOf(
-            '0' to mutableListOf("Charminar Express","Tambaram", "Hyderabad","9"),
-            '1' to mutableListOf("Ananya Express", "Sealdah", 	"Udaipur","10"),
-    		'2' to mutableListOf("Avantika Express", "Indore Jn", "Mumbai Central","11"),
-        )
+      '0' to mutableListOf("Charminar Express","Tambaram", "Hyderabad","9"),
+      '1' to mutableListOf("Ananya Express", "Sealdah", 	"Udaipur","10"),
+      '2' to mutableListOf("Avantika Express", "Indore Jn", "Mumbai Central","11")
+   )
    
    var filterKey : String = args[0];
    var filterVal : String = args[1];
