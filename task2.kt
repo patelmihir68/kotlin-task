@@ -67,7 +67,7 @@ fun main(args: Array<String>) {
     println("Want Beverage? Enter 1 for Tea / 2 for Coffee!")
     println(args[0])
     if (args[0].equals("1")) {
-        val baverage = Tea()
+        var baverage = Tea()
         baverage.getBeverage()
     }else if (args[0].equals("2")) {
         var baverage = Coffee()
