@@ -1,5 +1,4 @@
 class TestDemo {
-    fun stringHelper (S : String) : Int { return 0 }
 
     fun getScreenName () :String {
         return "splash screen"
