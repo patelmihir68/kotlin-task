@@ -41,7 +41,10 @@ class TestDemo {
     }
 }
 // ==========================================
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+
+
 
 internal class testDemoTest {
 
@@ -51,7 +54,7 @@ internal class testDemoTest {
         val screenName = testDemo.getScreenName()
         val layoutName = testDemo.generateLayoutName(screenName, "Android");
         val hasNumber = containsNumber(layoutName)
-        assertEquals(hasNumber, false)
+        assertEquals(hasNumber, true, "layout name contain number")
     }
 
     @Test
