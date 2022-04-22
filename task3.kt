@@ -41,8 +41,9 @@ class TestDemo {
     }
 }
 // ==========================================
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
+
 import org.junit.jupiter.api.Test
 
 internal class testDemoTest {
@@ -51,10 +52,13 @@ internal class testDemoTest {
     fun layoutName() {
         val testDemo = TestDemo()
         val screenName = testDemo.getScreenName()
-        val layoutName = testDemo.generateLayoutName(screenName, "Android");
+        var layoutName = testDemo.generateLayoutName(screenName, "Android");
 
         val regex = "[_A-z]*((-|)*[_A-z])*\$".toRegex()
         assertTrue(regex.matches(layoutName), "Layout name contain number,space or special char.")
+        assertNotNull(layoutName)
+        assertNotEquals(layoutName, "")
+        assertNotEquals(layoutName, " ")
     }
 
     @Test
@@ -62,9 +66,12 @@ internal class testDemoTest {
         val testDemo = TestDemo()
         val screenName = testDemo.getScreenName()
         val controllerName = testDemo.generateControllerName(screenName, "Android");
-        
+
         val regex = "[_A-z]*((-|)*[_A-z])*\$".toRegex()
-        assertTrue(regex.matches(layoutName), "Controller name contain number,space or special char.")
+        assertTrue(regex.matches(controllerName), "controller name contain number,space or special char.")
+        assertNotNull(controllerName)
+        assertNotEquals(controllerName, "")
+        assertNotEquals(controllerName, " ")
         println(controllerName)
     }
 
@@ -73,10 +80,12 @@ internal class testDemoTest {
         val testDemo = TestDemo()
         val screenName = testDemo.getScreenName()
         val modelName = testDemo.generateModelName(screenName, "Android");
-        
+
         val regex = "[_A-z]*((-|)*[_A-z])*\$".toRegex()
-        assertTrue(regex.matches(layoutName), "Model name contain number,space or special char.")
-        
+        assertTrue(regex.matches(modelName), "Model name contain number,space or special char.")
+        assertNotNull(modelName)
+        assertNotEquals(modelName, "")
+        assertNotEquals(modelName, " ")
         println(modelName)
     }
 }
