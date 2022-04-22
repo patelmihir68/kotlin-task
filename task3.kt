@@ -41,10 +41,9 @@ class TestDemo {
     }
 }
 // ==========================================
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
-
 
 internal class testDemoTest {
 
@@ -53,8 +52,9 @@ internal class testDemoTest {
         val testDemo = TestDemo()
         val screenName = testDemo.getScreenName()
         val layoutName = testDemo.generateLayoutName(screenName, "Android");
-        val hasNumber = containsNumber(layoutName)
-        assertEquals(hasNumber, true, "layout name contain number")
+
+        val regex = "[_A-z]*((-|)*[_A-z])*\$".toRegex()
+        assertTrue(regex.matches(layoutName), "Layout name contain number,space or special char.")
     }
 
     @Test
@@ -62,6 +62,9 @@ internal class testDemoTest {
         val testDemo = TestDemo()
         val screenName = testDemo.getScreenName()
         val controllerName = testDemo.generateControllerName(screenName, "Android");
+        
+        val regex = "[_A-z]*((-|)*[_A-z])*\$".toRegex()
+        assertTrue(regex.matches(layoutName), "Controller name contain number,space or special char.")
         println(controllerName)
     }
 
@@ -70,18 +73,10 @@ internal class testDemoTest {
         val testDemo = TestDemo()
         val screenName = testDemo.getScreenName()
         val modelName = testDemo.generateModelName(screenName, "Android");
+        
+        val regex = "[_A-z]*((-|)*[_A-z])*\$".toRegex()
+        assertTrue(regex.matches(layoutName), "Model name contain number,space or special char.")
+        
         println(modelName)
-    }
-
-    fun containsNumber(s: String?) :Boolean {
-        var containsNumber = false
-        if (s != null && !s.isEmpty()) {
-            for (c in s.toCharArray()) {
-                if (Character.isDigit(c).also { containsNumber = it }) {
-                    break
-                }
-            }
-        }
-        return containsNumber
     }
 }
