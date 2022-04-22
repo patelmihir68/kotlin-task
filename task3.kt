@@ -41,3 +41,45 @@ class TestDemo {
         return modelName
     }
 }
+// ==========================================
+import org.junit.jupiter.api.Test
+
+internal class testDemoTest {
+
+    @Test
+    fun layoutName() {
+        val testDemo = TestDemo()
+        val screenName = testDemo.getScreenName()
+        val layoutName = testDemo.generateLayoutName(screenName, "Android");
+        val hasNumber = containsNumber(layoutName)
+        assertEquals(hasNumber, false)
+    }
+
+    @Test
+    fun controllerName() {
+        val testDemo = TestDemo()
+        val screenName = testDemo.getScreenName()
+        val controllerName = testDemo.generateControllerName(screenName, "Android");
+        println(controllerName)
+    }
+
+    @Test
+    fun modelName() {
+        val testDemo = TestDemo()
+        val screenName = testDemo.getScreenName()
+        val modelName = testDemo.generateModelName(screenName, "Android");
+        println(modelName)
+    }
+
+    fun containsNumber(s: String?) :Boolean {
+        var containsNumber = false
+        if (s != null && !s.isEmpty()) {
+            for (c in s.toCharArray()) {
+                if (Character.isDigit(c).also { containsNumber = it }) {
+                    break
+                }
+            }
+        }
+        return containsNumber
+    }
+}
