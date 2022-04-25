@@ -4,11 +4,8 @@ import kotlinx.coroutines.runBlocking
 import kotlin.system.measureTimeMillis
 import Car as Car
 
-
-
-
 fun main () {
-    val numberOfCar = 1
+    val numberOfCar = 10
     val time  = measureTimeMillis {
         buildNewCar(numberOfCar)
     }
@@ -18,15 +15,13 @@ fun main () {
 }
 
 fun buildNewCar(numberOfCar : Int ) = runBlocking {
-        repeat(numberOfCar) { // launch a lot of coroutines
-            launch {
-                var car = Car()
-                car.build(it+1)
-            }
+    repeat(numberOfCar) { // launch a lot of coroutines
+        launch {
+            var car = Car()
+            car.build(it+1)
         }
+    }
 }
-
-
 
 //car.kt
 
@@ -34,26 +29,22 @@ import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
 class Car {
-    var timeForSingleCar  : Long = 100;
-    fun build(carNumber : Int) =  runBlocking { // this: CoroutineScope
-            launch { // launch a new coroutine and continue
-                val time  = measureTimeMillis {
-                    buildBody(carNumber) // print after delay
-                    paint(carNumber) // print after delay
-                    installDriveTrain(carNumber) // print after delay
-                    installBattery(carNumber) // print after delay
-                    installInterior(carNumber) // print after delay
-                    println(" car $carNumber build...")
-                }
-
-                if(carNumber == 1){
-                    timeForSingleCar = time;
-                    println("First car time $timeForSingleCar")
-                }
-            }
-        
-        println("car is building...")
+    var timeForSingleCar  : Long = 0;
+    suspend fun build (carNumber: Int)  {
+        var time  = measureTimeMillis {
+            buildBody(carNumber) // print after delay
+            paint(carNumber) // print after delay
+            installDriveTrain(carNumber) // print after delay
+            installBattery(carNumber) // print after delay
+            installInterior(carNumber) // print after delay
+            println(" car $carNumber build...")
+        }
+        if(carNumber == 1){
+            timeForSingleCar = time;
+            println("First car time $timeForSingleCar")
+        }
     }
+
     private suspend fun buildBody(carNumber : Int){
         delay(5000L) // non-blocking delay for 5 second (default time unit is ms)
         println("Building Body of car ${carNumber}!")
@@ -75,7 +66,7 @@ class Car {
     }
 
     private suspend fun installInterior (carNumber : Int) {
-        delay(15000L) // non-blocking delay for 5 second (default time unit is ms)
+        delay(15000L) // non-blocking delay for 15 second (default time unit is ms)
         println("Installing interior in ${carNumber}!")
     }
 }
