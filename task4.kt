@@ -1,18 +1,24 @@
 //main.kt
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
-import Car as Car
 
 fun main() {
     runBlocking {
-        val numberOfCar = 10
-        val time = measureTimeMillis {
-            val avgTime = buildNewCar(numberOfCar);
-            println("Time taken to build single car is  ${avgTime}. ")
+        val job = launch {
+            val numberOfCar = 1000;
+            var time = 0
+            try {
+                 time = measureTimeMillis {
+                     val avgTime = buildNewCar(numberOfCar);
+                     println("Time taken to build single car is  ${avgTime}. ")
+                 }.toInt()
+            } finally {
+                println("Total time taken to build ($numberOfCar) cars is  ${time}. ")
+            }
         }
-        println("Total time taken to build ($numberOfCar) cars is  ${time}. ")
+        delay(60000L) // delay a bit
+        job.cancelAndJoin() // cancels the job and waits for its completion
+        println("main: I'm tired of waiting! Now I can quit.")
     }
 }
 
