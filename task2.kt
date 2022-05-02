@@ -1,78 +1,64 @@
-interface CleanPot {
-    fun cleanPot()
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.dsl.module
+
+interface Heater {
+    fun on ()
+    fun off ()
+    fun isHeating (): Boolean
 }
 
-abstract class Beverage {
-
-    fun addHotWater() {
-        println("Adding hot water")
-    }
-
-    fun addHotMilk() {
-        println("Adding hot milk")
-    }
-
-    fun addSugar() {
-        println("Adding sugar")
-    }
-
-    fun getMixture() {
-        addHotWater()
-        addHotMilk()
-        addSugar()
-    }
-
-    abstract fun getBeverage()
-
-    abstract fun addIngredients()
+interface Pump {
+    fun pump ()
 }
 
-class Tea : Beverage(), CleanPot {
-
-    override fun cleanPot() {
-        println("Cleaning  pot")
-    }
-
-    override fun addIngredients() {
-        println("Tea bag is added")
-    }
-
-    override fun getBeverage() {
-        cleanPot()
-        getMixture()
-        addIngredients()
-        println("Tea is Ready! Enjoy")
+class CoffeeMaker (private val heater: Heater, private val pump: Pump) {
+    fun brew (type : String){
+        heater.on()
+        if (heater.isHeating()){
+            pump.pump()
+            println( "$type coffee's Ready! Enjoy")
+        }else{
+            println("Heater is not started...")
+        }
     }
 }
 
-class Coffee : Beverage(), CleanPot {
+class ElectricHeater() : Heater {
+    var isHeaterStarted = false
+    override fun on () {
+        println("Heater started..")
+        isHeaterStarted = true
+    }
+    override fun off() {
+        println("Heater off..")
+        isHeaterStarted = false
+    }
+    override fun isHeating (): Boolean {
+        return isHeaterStarted
+    }
+}
 
-    override fun cleanPot() {
-        println("Cleaning  pot")
+class PumpOne() : Pump {
+    override fun pump(){
+        println("Pump started...")
     }
+}
 
-    override fun addIngredients() {
-        println("Coffee bag is added")
-    }
-    
-    override fun getBeverage() {
-        cleanPot()
-        getMixture()
-        addIngredients()
-        println("Coffee is Ready! Enjoy")
-    }
+val myModule = module {
+    factory { ElectricHeater() as Heater }
+    factory { PumpOne() as Pump }
+    factory { CoffeeMaker(get(), get()) }
+}
+
+class Main : KoinComponent {
+    val coffeeMaker: CoffeeMaker by inject()
 }
 
 fun main(args: Array<String>) {
-    println("Want beverage? Enter 1 for Tea / 2 for Coffee!")
-    println(args[0])
-    if (args[0].equals("1")) {
-        var baverage = Tea()
-        baverage.getBeverage()
-    }else if (args[0].equals("2")) {
-        var baverage = Coffee()
-        baverage.getBeverage()
-    }else{
-        println("Invalid Input")
-    }
+    val type = args[0]
+    startKoin { modules(listOf( myModule)) }
+    val main = Main()
+    main.coffeeMaker.brew(type);
 }
