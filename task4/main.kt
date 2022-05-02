@@ -3,34 +3,52 @@ import org.koin.core.component.inject
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.module
 
+interface Heater {
+    fun on ()
+    fun off ()
+    fun isHeating (): Boolean
+}
+
+interface Pump {
+    fun pump ()
+}
+
 class CoffeeMaker (private val heater: Heater, private val pump: Pump) {
-
-    fun brew (){
+    fun brew (type : String){
         heater.on()
-        pump.pump()
-        println("Coffee's Ready! Enjoy")
-
+        if (heater.isHeating()){
+            pump.pump()
+            println( "$type coffee's Ready! Enjoy")
+        }else{
+            println("Heater is not started...")
+        }
     }
 }
-class Heater() {
-    fun on (){
 
+class ElectricHeater() : Heater {
+    private var isHeaterStarted = false
+    override fun on () {
+        println("Electric heater started..")
+        isHeaterStarted = true
     }
-    fun off(){
-
+    override fun off() {
+        println("Heater off..")
+        isHeaterStarted = false
     }
-    fun isHeating (){
-
+    override fun isHeating (): Boolean {
+        return isHeaterStarted
     }
 }
-class Pump() {
-    fun pump(){
+
+class PumpOne() : Pump {
+    override fun pump(){
         println("Pump started...")
     }
 }
+
 val myModule = module {
-    factory { Heater() }
-    factory { Pump() }
+    factory { ElectricHeater() as Heater }
+    factory { PumpOne() as Pump }
     factory { CoffeeMaker(get(), get()) }
 }
 
@@ -39,7 +57,8 @@ class Main : KoinComponent {
 }
 
 fun main(args: Array<String>) {
+    val type = args[0]
     startKoin { modules(listOf( myModule)) }
     val main = Main()
-    main.coffeeMaker.brew();
+    main.coffeeMaker.brew(type);
 }
