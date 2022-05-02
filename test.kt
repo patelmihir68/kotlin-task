@@ -1,36 +1,51 @@
-fun main(args: Array<String>) {
-   val trainList = mapOf(
-      '0' to mutableListOf("Charminar Express","Tambaram", "Hyderabad","9"),
-      '1' to mutableListOf("Ananya Express", "Sealdah", 	"Udaipur","10"),
-      '2' to mutableListOf("Avantika Express", "Indore Jn", "Mumbai Central","11")
-   )
-   
-   var filterKey : String = args[0];
-   var filterVal : String = args[1];
-   
-   val getIndex: Int = when(filterKey) {
-         "name" -> 0
-         "source" -> 1
-         "destination" -> 2
-         "time" -> 3
-         else -> -1
-     }
-    
-   var result: Boolean = false
-   
-   for ((index, trainDetails) in trainList) {
-       result = findTrains(filterVal, getIndex, trainDetails);
-        if(result){
-              println(trainDetails)
-         }
-    }      
-}
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.dsl.module
 
-fun findTrains(value: String, index: Int, train: MutableList<String>): Boolean {
-    for (arrIndex in train.indices) {
-        if(arrIndex === index && train[arrIndex].lowercase() == value.lowercase()) {
-        	return true
+class CoffeeMaker (private val heater: Heater, private val pump: Pump) {
+    fun brew (type : String){
+        heater.on()
+        if (heater.isHeating()){
+            pump.pump()
+            println( "$type coffee's Ready! Enjoy")
+        }else{
+            println("Heater is not started...")
         }
     }
-    return false
+}
+class Heater() {
+    var isHeaterStarted = false
+    fun on () {
+        println("Heater started..")
+        isHeaterStarted = true
+    }
+    fun off() {
+        println("Heater off..")
+        isHeaterStarted = false
+    }
+    fun isHeating (): Boolean {
+        return isHeaterStarted
+    }
+}
+class Pump() {
+    fun pump(){
+        println("Pump started...")
+    }
+}
+val myModule = module {
+    factory { Heater() }
+    factory { Pump() }
+    factory { CoffeeMaker(get(), get()) }
+}
+
+class Main : KoinComponent {
+    val coffeeMaker: CoffeeMaker by inject()
+}
+
+fun main(args: Array<String>) {
+    val type = args[0]
+    startKoin { modules(listOf( myModule)) }
+    val main = Main()
+    main.coffeeMaker.brew(type);
 }
